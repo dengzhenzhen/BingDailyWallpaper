@@ -69,11 +69,11 @@ class Bing:
     
     def run(self, waiting=86400):
         self.isalive = True
-        daemon_thread = threading.Thread(target=self.daemon)
+        print('ccc')
+        daemon_thread = threading.Thread(target=self.daemon, args=(waiting,))
         daemon_thread.start()
         try:
             while True:
-                print('......')
                 if os.path.exists(self.update_save_path()):
                     time.sleep(waiting)
                 else:
@@ -84,11 +84,13 @@ class Bing:
         finally:
             self.isalive = False
 
-    def daemon(self):
+    def daemon(self, waiting):
         while self.isalive:
             time.sleep(1)
-        self.run()
+        try:pass
+        finally:
+            self.run(waiting=waiting)
 
 if __name__ == "__main__":
     bing = Bing()
-    bing.run()
+    bing.run(waiting=3600)
