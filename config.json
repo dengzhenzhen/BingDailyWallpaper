@@ -1,4 +1,5 @@
 {
-    "saveDir":"./wallpaper",
-    "imageName":"{date}.jpg"
+    "saveDir":"E:/BingWallpaper",
+    "imageName":"{date}.jpg",
+    "logPath":"E:/BingWallpaper/logs/run.log"
 }

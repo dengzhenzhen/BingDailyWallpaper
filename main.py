@@ -5,6 +5,7 @@ import datetime
 import os
 import json
 import time
+from log_manager import log
 
 class Bing:
     def __init__(self):
@@ -14,7 +15,7 @@ class Bing:
         self.image_name = ""
         self.save_path = ""
         self.img_dir = ""
-        self.get_config("config.json")
+        self.get_config("D:\\Repositories\\BingDailyWallpaper\\config.json")
         self.update()
 
     def update(self):
@@ -35,6 +36,7 @@ class Bing:
         src = soup.find(attrs={'id':'bgImgProgLoad'}).get("data-ultra-definition-src")
         return self.base_url + src
 
+    @log
     def save_img(self):
         ret, img = self.http_request(requests.get, self.img_url)
         if ret:
@@ -44,6 +46,7 @@ class Bing:
         else:
             return False
     
+    @log
     def http_request(self, request_method, url, payloads={}, retries=3):
         for i in range(retries):
             res = request_method(url, payloads)
@@ -67,9 +70,9 @@ class Bing:
         self.img_dir = config.get('saveDir')
         self.image_name = config.get('imageName')
     
+    @log
     def run(self, waiting=86400):
         self.isalive = True
-        print('ccc')
         daemon_thread = threading.Thread(target=self.daemon, args=(waiting,))
         daemon_thread.start()
         try:
@@ -84,6 +87,7 @@ class Bing:
         finally:
             self.isalive = False
 
+    @log
     def daemon(self, waiting):
         while self.isalive:
             time.sleep(1)
@@ -91,6 +95,9 @@ class Bing:
         finally:
             self.run(waiting=waiting)
 
+    def __str__(self):
+        return "Bing"
+
 if __name__ == "__main__":
     bing = Bing()
-    bing.run(waiting=3600)
+    bing.run(waiting=5)
