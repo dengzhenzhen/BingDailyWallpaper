@@ -1,1 +1,1 @@
-nohup python3 test.py >log 2>&1 &
+nohup python3 main.py >log 2>&1 &

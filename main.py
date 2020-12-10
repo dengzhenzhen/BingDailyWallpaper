@@ -5,17 +5,18 @@ import datetime
 import os
 import json
 import time
-from log_manager import log
+from log_manager import log, CONFIG_PATH
 
 class Bing:
     def __init__(self):
-        self.base_url = "http://bing.com"
+        self.base_url = "http://cn.bing.com"
         self.main_page = ""
         self.img_url = ""
         self.image_name = ""
         self.save_path = ""
         self.img_dir = ""
-        self.get_config("D:\\Repositories\\BingDailyWallpaper\\config.json")
+        self.stop = False
+        self.get_config(CONFIG_PATH)
         self.update()
 
     def update(self):
@@ -69,16 +70,22 @@ class Bing:
             config = json.load(fp)
         self.img_dir = config.get('saveDir')
         self.image_name = config.get('imageName')
+        self.waiting_sec = config.get('waitingTime')
     
+    def set_waiting_time(self, waiting_sec):
+        self.waiting_sec = waiting_sec
+
     @log
-    def run(self, waiting=86400):
+    def run(self):
         self.isalive = True
-        daemon_thread = threading.Thread(target=self.daemon, args=(waiting,))
+        daemon_thread = threading.Thread(target=self.daemon)
         daemon_thread.start()
         try:
             while True:
                 if os.path.exists(self.update_save_path()):
-                    time.sleep(waiting)
+                    time.sleep(self.waiting_sec)
+                elif self.stop:
+                    break
                 else:
                     self.update()
                     self.save_img()
@@ -88,16 +95,20 @@ class Bing:
             self.isalive = False
 
     @log
-    def daemon(self, waiting):
+    def daemon(self):
         while self.isalive:
             time.sleep(1)
         try:pass
         finally:
-            self.run(waiting=waiting)
+            if not self.stop:
+                self.run()
+
+    def stop_running(self):
+        self.stop = True
 
     def __str__(self):
         return "Bing"
 
 if __name__ == "__main__":
     bing = Bing()
-    bing.run(waiting=5)
+    bing.run()

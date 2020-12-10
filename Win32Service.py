@@ -9,6 +9,8 @@ import servicemanager
 import sys
 import win32timezone
 import threading
+from main import Bing
+bing = Bing()
 
 class PythonService(win32serviceutil.ServiceFramework):   
   
@@ -40,23 +42,24 @@ class PythonService(win32serviceutil.ServiceFramework):
   
     def SvcDoRun(self):  
         import time
-        try:
-            from main import Bing
-            bing = Bing()
-            thread = threading.Thread(target=bing.run)
-            thread.start()
-        except Exception as err:
-            self.logger.info(str(err))
-        self.logger.info("service is run....")
-        while self.run:  
-            # self.logger.info("I am runing....")  
-            time.sleep(2)  
+        # try:
+        #     from main import Bing
+        #     bing = Bing()
+        #     thread = threading.Thread(target=bing.run, kwargs={"waiting":10})
+        #     thread.start()
+        # except Exception as err:
+        #     self.logger.info(str(err))
+        # self.logger.info("service is run....")
+        # while self.run:  
+        #     # self.logger.info("I am runing....")  
+        #     time.sleep(2)  
+        bing.run()
               
     def SvcStop(self):   
         self.logger.info("service is stop....")
-        os.system("taskkill /IM Win32Service.exe /F")
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)   
-        win32event.SetEvent(self.hWaitStop)   
+        win32event.SetEvent(self.hWaitStop)
+        os.system("taskkill /IM Win32Service.exe /F")
         self.run = False  
   
 if __name__=='__main__':   

@@ -1,8 +1,16 @@
 import logging
 import json
 import os
+from platform import system
 
-with open('D:\\Repositories\\BingDailyWallpaper\\config.json', 'r') as fp:
+# CONFIG_PATH = "E:\\BingWallpaper\\config.json"
+CONFIG_PATH = "./config.json"
+if system() == 'Linux':
+    CONFIG_PATH = "./config.json"
+if system() == 'Windows':
+    CONFIG_PATH = "E:\\BingWallpaper\\config.json"
+
+with open(CONFIG_PATH, 'r') as fp:
     config = json.load(fp)
 
 log_path = config.get('logPath')
