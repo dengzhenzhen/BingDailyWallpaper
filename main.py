@@ -5,6 +5,12 @@ import datetime
 import os
 import json
 import time
+import smtplib
+
+from email.mime.text import MIMEText
+from email.header import Header
+from email.mime.multipart import MIMEMultipart
+
 from log_manager import log, CONFIG_PATH
 
 class Bing:
@@ -108,6 +114,41 @@ class Bing:
 
     def __str__(self):
         return "Bing"
+
+class Mail:
+    def __init__(self):
+        self.user = None
+        self.password = None
+        self.from_addr = None
+        self.to_addr_list = None
+
+    def load_config(self, config_path):
+        with open(config_path, 'r') as fp:
+            config = json.load(fp)
+        self.user = config.get('userName')
+        self.password = config.get('passwd')
+        self.from_addr = config.get('From')
+        self.to_addr_list = config.get('To')
+
+    def send_image(self, img_bytes):
+        mail = MIMEMultipart()
+        mail['From'] = Header('发件人')
+        mail['To'] = Header('asdasdasdsad')
+        mail['Subject'] = Header('邮件标题')
+        mail.attach(MIMEText('zhengwen'))
+        with open('./wallpaper/2020-08-29.jpg', 'rb') as fp:
+            attachment = MIMEText(fp.read(), 'base64', 'utf-8')
+            attachment['Content-Type'] = 'application/octet-stream'
+            attachment['Content-Disposition'] = 'attachment;filename="hello.jpg"'
+        mail.attach(attachment)
+        print(mail)
+
+        server = smtplib.SMTP('smtp.qq.com')
+        account = '374894000@qq.com'
+        password = '****'
+        server.login(account, password)
+        server.sendmail(account, account, mail.as_string())
+        server.quit()
 
 if __name__ == "__main__":
     bing = Bing()
