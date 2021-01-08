@@ -22,7 +22,10 @@ class Bing:
         self.save_path = ""
         self.img_dir = ""
         self.stop = False
+        self.enable_mail = False
+        self.mail = Mail()
         self.get_config(CONFIG_PATH)
+        self.mail.load_config(CONFIG_PATH)
         self.update()
 
     def update(self):
@@ -49,6 +52,8 @@ class Bing:
         if ret:
             with open(self.save_path, 'wb') as fp:
                 fp.write(img)
+                if self.enable_mail:
+                    self.mail.send_image(img)
             return True
         else:
             return False
@@ -77,6 +82,7 @@ class Bing:
         self.img_dir = config.get('saveDir')
         self.image_name = config.get('imageName')
         self.waiting_sec = config.get('waitingTime')
+        self.enable_mail = config.get('enableMail')
     
     def set_waiting_time(self, waiting_sec):
         self.waiting_sec = waiting_sec
@@ -130,24 +136,47 @@ class Mail:
         self.from_addr = config.get('From')
         self.to_addr_list = config.get('To')
 
-    def send_image(self, img_bytes):
+    def send_image_to(self, img_bytes, to_addr):
+        # demo
         mail = MIMEMultipart()
-        mail['From'] = Header('发件人')
-        mail['To'] = Header('asdasdasdsad')
-        mail['Subject'] = Header('邮件标题')
-        mail.attach(MIMEText('zhengwen'))
-        with open('./wallpaper/2020-08-29.jpg', 'rb') as fp:
-            attachment = MIMEText(fp.read(), 'base64', 'utf-8')
-            attachment['Content-Type'] = 'application/octet-stream'
-            attachment['Content-Disposition'] = 'attachment;filename="hello.jpg"'
+        mail['From'] = Header(self.from_addr)
+        mail['To'] = Header(to_addr)
+        mail['Subject'] = Header('今日壁纸')
+        mail.attach(MIMEText('今日壁纸'))
+        attachment = MIMEText(img_bytes, 'base64', 'utf-8')
+        attachment['Content-Type'] = 'application/octet-stream'
+        attachment['Content-Disposition'] = 'attachment;filename="hello.jpg"'
         mail.attach(attachment)
-        print(mail)
-
         server = smtplib.SMTP('smtp.qq.com')
-        account = '374894000@qq.com'
-        password = '****'
+        account = self.user
+        password = self.password
         server.login(account, password)
         server.sendmail(account, account, mail.as_string())
+        server.quit()
+
+
+    def send_image(self, img_bytes):
+        mail_list = []
+        for to_addr in self.to_addr_list:
+            date = datetime.date.today()
+            mail = MIMEMultipart()
+            mail['From'] = Header(self.from_addr)
+            mail['To'] = Header(to_addr)
+            mail['Subject'] = Header('今日壁纸{date}'.format(date=date ))
+            mail.attach(MIMEText('{0}'.format(date)))
+
+            attachment = MIMEText(img_bytes, 'base64', 'utf-8')
+            attachment['Content-Type'] = 'application/octet-stream'
+            attachment['Content-Disposition'] = 'attachment;filename="{0}.jpg"'.format(date)
+            mail.attach(attachment)
+            mail_list.append({'mail':mail, 'to_addr':to_addr})
+
+        server = smtplib.SMTP('smtp.qq.com')
+        account = self.user
+        password = self.password
+        server.login(account, password)
+        for mail in mail_list:
+            server.sendmail(account, mail['to_addr'], mail['mail'].as_string())
         server.quit()
 
 if __name__ == "__main__":
