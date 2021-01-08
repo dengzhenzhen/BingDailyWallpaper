@@ -21,4 +21,5 @@ A simple tool to collect wallpapers from bing.com
 ## Todo List
 
  - ~~Add method how to deploy on Windows~~(Done)
- - E-mail notice
+ - ~~E-mail notice~~(Done)
+ - Auto install shell script
