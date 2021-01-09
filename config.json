@@ -1,13 +1,14 @@
 {
-    "saveDir":"./BingWallpaper",
+    "saveDir":"./images",
     "imageName":"{date}.jpg",
     "logPath":"./log/run.log",
     "userName":"374894000@qq.com",
-    "passwd": "****",
+    "passwd": "dqobycrdwglmcajj",
+    "waitingTime":1800,
     "From": "374894000@qq.com",
     "To": [
-        "374894000@qq.com",
         "3210946881@qq.com"
     ],
-    "enableMail": false
+
+    "enableMail": true
 }
