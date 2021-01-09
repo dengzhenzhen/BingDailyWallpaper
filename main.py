@@ -154,7 +154,7 @@ class Mail:
         server.sendmail(account, account, mail.as_string())
         server.quit()
 
-
+    @log
     def send_image(self, img_bytes):
         mail_list = []
         for to_addr in self.to_addr_list:
