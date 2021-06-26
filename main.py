@@ -39,7 +39,7 @@ class Bing:
         if ret:
             return ret, content
         else:
-            return False, content 
+            return False, content
 
     def get_img_url(self):
         soup = bs4.BeautifulSoup(self.main_page, features="html.parser")
@@ -57,7 +57,7 @@ class Bing:
             return True
         else:
             return False
-    
+
     @log
     def http_request(self, request_method, url, payloads={}, retries=3):
         for i in range(retries):
@@ -83,7 +83,7 @@ class Bing:
         self.image_name = config.get('imageName')
         self.waiting_sec = config.get('waitingTime')
         self.enable_mail = config.get('enableMail')
-    
+
     def set_waiting_time(self, waiting_sec):
         self.waiting_sec = waiting_sec
 
@@ -179,6 +179,14 @@ class Mail:
             server.sendmail(account, mail['to_addr'], mail['mail'].as_string())
         server.quit()
 
-if __name__ == "__main__":
+
+def main():
+    # mail = Mail()
+    # mail.load_config(CONFIG_PATH)
+    # mail.send_image(b"")
     bing = Bing()
     bing.run()
+
+
+if __name__ == "__main__":
+    main()
