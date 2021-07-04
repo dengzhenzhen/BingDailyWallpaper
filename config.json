@@ -1,14 +1,14 @@
 {
-    "saveDir":"./images",
+    "saveDir":"/images",
     "imageName":"{date}.jpg",
     "logPath":"./log/run.log",
     "userName":"374894000@qq.com",
     "passwd": "****",
-    "waitingTime":1800,
+    "waitingTime":1,
     "From": "374894000@qq.com",
     "To": [
-        "3210946881@qq.com"
+        "374894000@qq.com"
     ],
 
-    "enableMail": true
+    "enableMail": false
 }
