@@ -18,8 +18,12 @@ A simple tool to collect wallpapers from bing.com
    - excute "pyinstaller -F Win32Service.py"
    - excute "dist\Win32Service.exe install && dist\Win32Service.exe update && dist\Win32Service.exe start"
 
+- Docker
+  - install docker
+  - ```docker run -d -v you image dir:/images dengzhenzhen/bing-daily-wallpaper:0.0.1```
+
 ## Todo List
 
  - ~~Add method how to deploy on Windows~~(Done)
  - ~~E-mail notice~~(Done)
- - Auto install shell script
+ - ~~Auto install shell script~~(Done)
