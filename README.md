@@ -14,7 +14,7 @@ A simple tool to collect wallpapers from bing.com
  - Windows
    - open cmd
    - git clone this repository
-   - excute "pip install -r requirements.txt"
+   - excute "pip install -r requirements_windows.txt"
    - excute "pyinstaller -F Win32Service.py"
    - excute "dist\Win32Service.exe install && dist\Win32Service.exe update && dist\Win32Service.exe start"
 
@@ -27,3 +27,5 @@ A simple tool to collect wallpapers from bing.com
  - ~~Add method how to deploy on Windows~~(Done)
  - ~~E-mail notice~~(Done)
  - ~~Auto install shell script~~(Done)
+ - install as a pypi package
+ - manage system
