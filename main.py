@@ -43,7 +43,10 @@ class Bing:
 
     def get_img_url(self):
         soup = bs4.BeautifulSoup(self.main_page, features="html.parser")
-        src = soup.find(attrs={'id':'bgImgProgLoad'}).get("data-ultra-definition-src")
+        try:
+            src = soup.find(attrs={'id':'bgImgProgLoad'}).get("data-ultra-definition-src")
+        except:
+            src = soup.find(attrs={'id':'preloadBg'}).get("href")
         return self.base_url + src
 
     @log
