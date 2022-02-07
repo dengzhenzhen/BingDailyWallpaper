@@ -24,7 +24,7 @@ logging.basicConfig(filename=log_path,
 
 def log(func):
     def inner(*args, **kwargs):
-        logging.info("{0}, {1}, {2}".format(func.__name__, [str(i) for i in args], kwargs))
+        logging.debug("{0}, {1}, {2}".format(func.__name__, [str(i) for i in args], kwargs))
         return func(*args, **kwargs)
     return inner
 
@@ -34,4 +34,3 @@ def aaa(a,b,c=1):
 
 if __name__ == "__main__":
     aaa(1, 3, c=5)
-    

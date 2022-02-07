@@ -13,6 +13,7 @@ from email.mime.multipart import MIMEMultipart
 
 from log_manager import log, CONFIG_PATH
 
+
 class Bing:
     def __init__(self):
         self.base_url = "http://cn.bing.com"
@@ -33,7 +34,6 @@ class Bing:
         self.img_url = self.get_img_url()
         self.update_save_path()
 
-
     def get_main_page(self):
         ret, content = self.http_request(requests.get, self.base_url)
         if ret:
@@ -44,9 +44,9 @@ class Bing:
     def get_img_url(self):
         soup = bs4.BeautifulSoup(self.main_page, features="html.parser")
         try:
-            src = soup.find(attrs={'id':'bgImgProgLoad'}).get("data-ultra-definition-src")
+            src = soup.find(attrs={'id': 'bgImgProgLoad'}).get("data-ultra-definition-src")
         except:
-            src = soup.find(attrs={'id':'preloadBg'}).get("href")
+            src = soup.find(attrs={'id': 'preloadBg'}).get("href")
         return self.base_url + src
 
     @log
@@ -92,7 +92,7 @@ class Bing:
 
     @log
     def run(self):
-        self.isalive = True
+        self.is_alive = True
         daemon_thread = threading.Thread(target=self.daemon)
         daemon_thread.start()
         try:
@@ -107,13 +107,14 @@ class Bing:
         except Exception as err:
             print(err)
         finally:
-            self.isalive = False
+            self.is_alive = False
 
     @log
     def daemon(self):
-        while self.isalive:
+        while self.is_alive:
             time.sleep(1)
-        try:pass
+        try:
+            pass
         finally:
             if not self.stop:
                 self.run()
@@ -123,6 +124,7 @@ class Bing:
 
     def __str__(self):
         return "Bing"
+
 
 class Mail:
     def __init__(self):
@@ -165,14 +167,14 @@ class Mail:
             mail = MIMEMultipart()
             mail['From'] = Header(self.from_addr)
             mail['To'] = Header(to_addr)
-            mail['Subject'] = Header('今日壁纸{date}'.format(date=date ))
+            mail['Subject'] = Header('今日壁纸{date}'.format(date=date))
             mail.attach(MIMEText('{0}'.format(date)))
 
             attachment = MIMEText(img_bytes, 'base64', 'utf-8')
             attachment['Content-Type'] = 'application/octet-stream'
             attachment['Content-Disposition'] = 'attachment;filename="{0}.jpg"'.format(date)
             mail.attach(attachment)
-            mail_list.append({'mail':mail, 'to_addr':to_addr})
+            mail_list.append({'mail': mail, 'to_addr': to_addr})
 
         server = smtplib.SMTP('smtp.qq.com')
         account = self.user
